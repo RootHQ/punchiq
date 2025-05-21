@@ -1,55 +1,46 @@
-# ⏱️ Cloud-Based Time Tracking System
+# Punch IQ - Serverless Time Tracking System
 
-A modern, serverless employee time tracking solution that enables employees to punch in/out, track break times, and synchronize data with NetSuite. Built with Angular, Python (FastAPI), and fully deployed on AWS using Lambda, S3, API Gateway, DynamoDB, and SQS.
+This project implements a modern, serverless employee punch system using:
+
+- **Frontend:** Angular + S3 + CloudFront
+- **Backend:** FastAPI (Python) on AWS Lambda
+- **Infraestructura:** Terraform
+- **Base de datos:** DynamoDB
+- **Mensajería:** Amazon SQS
+
+## 📁 Estructura del Proyecto
+
+```
+punch-iq-project/
+├── frontend/         # Angular frontend
+├── backend/          # FastAPI and worker Lambdas
+├── infra/            # Terraform infrastructure code
+```
+
+## 🚀 Cómo desplegar
+
+1. **Frontend**
+   - Ir a `frontend/`
+   - Ejecutar `npm install` y `ng build --configuration production`
+   - Subir a S3: `aws s3 sync ./dist/punch-iq-frontend s3://<bucket> --delete`
+
+2. **Backend**
+   - Empaquetar `main.py` y `worker.py` como ZIP
+   - Configurar las rutas en Terraform o subir manualmente
+
+3. **Infraestructura**
+   - Ir a `infra/`
+   - Ejecutar `terraform init && terraform apply`
+
+4. **Verificar**
+   - API Gateway expuesto
+   - Lambda funcionando
+   - Logs en DynamoDB
+   - Frontend público vía CloudFront
+
+## 🧠 Autor
+Este proyecto fue generado automáticamente por asistencia AI en colaboración con el equipo técnico.
 
 ---
 
-## 🌐 Live Architecture Overview
-
-![Architecture Diagram]
----
-
-## 🧰 Tech Stack
-
-| Layer        | Technology                    |
-|--------------|-------------------------------|
-| Frontend     | Angular 16+, hosted on S3 + CloudFront |
-| Backend      | FastAPI + Python (AWS Lambda) |
-| API Gateway  | Amazon API Gateway            |
-| Database     | Amazon DynamoDB               |
-| Messaging    | Amazon SQS                    |
-| External API | NetSuite Integration          |
-| CI/CD        | GitHub Actions                |
-| IaC          | Terraform                     |
-| Monitoring   | CloudWatch                    |
-| DNS/Domain   | Amazon Route 53               |
-
----
-
-## ✨ Features
-
-- 🔐 Employee login using ID and secure PIN
-- 🕑 Punch in/out and break logging
-- 🔁 Sync punches to NetSuite (via SQS + Lambda Worker)
-- 📝 Punch history and session status tracking
-- 📱 Mobile and tablet responsive UI
-- 📡 Serverless architecture with AWS
-- ☁️ Infrastructure as Code with Terraform
-- 🔁 Full CI/CD using GitHub Actions
-
----
-
-## 📦 Project Structure
-
-```bash
-.
-├── frontend/                   # Angular app (S3 hosted)
-├── backend/                    # FastAPI app (Lambda functions)
-│   ├── main.py                 # FastAPI entrypoint
-│   ├── routers/                # API route modules
-│   └── services/               # Business logic
-│   └── lambdas/ 
-├── terraform/                  # Infrastructure as Code
-├── .github/workflows/          # GitHub Actions workflows
-├── docs/                       # Architecture diagrams, ERDs
-├── README.md                   # This file
+Happy shipping 🚀
