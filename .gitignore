@@ -1,0 +1,21 @@
+
+# Node modules
+node_modules/
+dist/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+env/
+venv/
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.backup
+
+# Others
+.DS_Store
+*.zip

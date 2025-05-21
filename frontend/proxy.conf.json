@@ -1,0 +1,11 @@
+{
+    "/api/affirmation": {
+      "target": "https://www.affirmations.dev",
+      "secure": true,
+      "changeOrigin": true,
+      "pathRewrite": {
+        "^/api/affirmation": ""
+      }
+    }
+  }
+  

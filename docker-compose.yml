@@ -1,0 +1,39 @@
+services:
+  frontend:
+    image: nginx:latest
+    container_name: punch-frontend
+    ports:
+      - "4200:80"
+    volumes:
+      - ./frontend/dist/punch-iq-frontend:/usr/share/nginx/html:ro
+      - ./frontend/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ./backend
+    container_name: punch-backend
+    ports:
+      - "8001:8001"
+    environment:
+      SQS_QUEUE_URL: http://localhost:9324/queue/dev-queue
+      DYNAMODB_TABLE_LOGS: logs
+      AWS_ACCESS_KEY_ID: dummy
+      AWS_SECRET_ACCESS_KEY: dummy
+      AWS_DEFAULT_REGION: us-east-1
+    volumes:
+      - ./backend:/app
+    command: uvicorn lambda.main:app --host 0.0.0.0 --port 8001 --reload
+
+  dynamodb-local:
+    image: amazon/dynamodb-local
+    container_name: dynamodb-local
+    ports:
+      - "8000:8000"
+    command: "-jar DynamoDBLocal.jar -sharedDb"
+    volumes:
+      - dynamodb_data:/home/dynamodblocal/data
+
+volumes:
+  dynamodb_data:
