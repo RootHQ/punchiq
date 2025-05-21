@@ -1,0 +1,12 @@
+<div class="missed-punch-dialog">
+    <div class="warning-icon"><div class="alertPopup"></div></div> 
+    <h2 mat-dialog-title>Confirm Missed Punch</h2>
+    <mat-dialog-content>
+      <p>{{ lastPunchTime }} </p>
+    </mat-dialog-content>
+    <mat-dialog-actions>
+      <button class="buttonConfirm btn" mat-raised-button (click)="onConfirm()">Confirm Missed Punch</button>
+      <button class="buttonCancel btn" mat-button mat-dialog-close (click)="onCancel()">Cancel and Exit</button>
+    </mat-dialog-actions>
+  </div>
+  

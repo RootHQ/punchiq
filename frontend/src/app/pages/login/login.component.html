@@ -1,0 +1,42 @@
+<div class="header">
+  <div  class="logo" ></div>
+   
+</div>
+<div class="login-container">
+    <div class="login-box">
+      
+
+      <h2>Login</h2>
+      <p class="description">Enter your user information to view punch options.</p>
+  
+      <form (ngSubmit)="onLogin()" class="form">
+
+        <label for="companyId" class="label">Company ID</label>
+        <input type="text" class="input_disabled" id="companyId" name="companyId" [value]="companyId" disabled />
+        <div class="space-top">        
+          <div class="error" *ngIf="error">{{ error }}</div>
+        </div>
+        <label for="employeeId" class="label  topSpace">Employee ID</label>
+        <input type="text" class="input" id="employeeId" [(ngModel)]="employeeId" name="employeeId" required />
+  
+        <label for="pin" class="label">PIN</label> 
+        <div class="pin-wrapper">
+          <input [type]="showPin ? 'text' : 'password'" class="input" id="pin" [(ngModel)]="pin" name="pin" required maxlength="4" />
+         
+          <div 
+            class="eye-icon" 
+            [ngClass]="showPin ? 'eye-off-outline' : 'eye-outline'" 
+            (click)="togglePinVisibility()" 
+            alt="Toggle Pin Visibility">
+          </div>
+        </div>
+      
+        <button (click)="onLogin()"class="btn-login topSpace" [disabled]="isLoading">
+          {{ isLoading ? 'Logging in...' : 'Continue' }}
+        </button>
+      </form>
+      
+    </div>
+       
+  </div>
+   

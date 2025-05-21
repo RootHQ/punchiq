@@ -1,0 +1,152 @@
+.punch-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #1c1c1c;
+    height: 100vh;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  
+  .punch-box {
+    background-color: #2b2b2b;
+    padding: 40px;
+    border-radius: 12px;
+    text-align: center;
+    width: 100%;
+    max-width: 400px;
+    color: #fff;
+  }
+  
+
+  .description {
+    font-size: 0.9rem;
+    color: #ccc;
+    margin-bottom: 20px;
+  }
+  
+  .form label {
+    display: block;
+    text-align: left;
+    margin: 10px 0 5px;
+    font-weight: bold;
+    color: #ddd;
+  }
+  
+  .form input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: none;
+    margin-bottom: 15px;
+    background-color: #3a3a3a;
+    color: #fff;
+  }
+  
+  .btn-punch {
+    width: 100%;
+    padding: 12px;
+    background-color: #4caf50;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    color: #fff;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+  
+  .separator {
+    margin: 20px 0;
+    color: #999;
+    font-size: 0.9rem;
+  }
+  
+  .btn-logout {
+    width: 100%;
+    padding: 12px;
+    background-color: #888;
+    border: none;
+    border-radius: 6px;
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    margin-bottom: 10px;
+  }
+  
+  .missed-punch {
+    display: block;
+    color: #ccc;
+    font-size: 0.85rem;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  
+  
+  .description {
+    font-size: 12px;
+    color: #DFDFDF;
+    margin-bottom: 20px;
+  }
+  
+  .form label {
+    display: block;
+    text-align: left;
+    margin: 20px 0 5px;
+    color: #b2b2b2;
+    font-weight: 500;
+    font-size: 12px;
+  }
+  
+  .form input {
+    width: 95%;
+    padding: 10px;
+    border-radius: 6px;
+    border: none;
+    margin-bottom: 10px;
+    background-color: #323232;
+    color: #fff;
+  }
+  
+  .Logoutbtn{
+
+    margin-top: 20px;
+    background-color: #7F7F7F;
+
+  }
+
+  .punchDays {
+
+    background-color: #3BB95C;
+  }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: white;
+    height: 19vh;
+    justify-content: center;
+  }
+
+  .divider::before,
+  .divider::after {
+    content: "";
+    flex: 1;
+    border-bottom: 1px solid white;
+    margin: 0 1em;
+  }
+  .missed-punch{
+    color: #B2B2B2;
+    text-align: center;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  .punchOutbtn {
+   
+    background-color: #C83D3D;
+    
+  }
+  
+
+  .breackbtn{
+    background-color: #42ABCD;
+  }
