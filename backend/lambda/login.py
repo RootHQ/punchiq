@@ -104,11 +104,11 @@ def get_today_punch_record(employee_id, company_id):
 
 
 def determine_punch_status(times):
-    if not times["punch_in_time"]:
+    if not times["punch_in_time"] and not times["punch_in_time"] and not times["break_start_time"] and not times["punch_out_time"]:
         return "NOT_PUNCHED_IN"
-    elif times["punch_in_time"] and not times["break_start_time"]:
+    elif times["punch_in_time"] and not times["break_start_time"] and not times["punch_out_time"]:
         return "PUNCHED_IN"
-    elif times["break_start_time"] and not times["break_end_time"]:
+    elif times["break_start_time"] and not times["break_end_time"] and not times["punch_out_time"]:
         return "ON_BREAK"
     elif times["punch_out_time"]:
         return "PUNCHED_OUT"
