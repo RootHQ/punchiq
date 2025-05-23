@@ -2,15 +2,17 @@ import json
 import boto3
 import os
 from datetime import datetime
+import pytz
 
 # Initialize resources
 dynamodb = boto3.resource('dynamodb')
 sqs = boto3.client('sqs')
 
 TABLE_NAME = os.environ.get('DYNAMODB_TABLE', 'Punch')
-SQS_URL = ''
+EMPLOYEE_TABLE_NAME = os.environ.get('EMPLOYEE_TABLE', 'employee')
 
 table = dynamodb.Table(TABLE_NAME)
+employee_table = dynamodb.Table(EMPLOYEE_TABLE_NAME)
 
 def lambda_handler(event, context):
     print("Received event:", event)
@@ -27,6 +29,7 @@ def lambda_handler(event, context):
         date = body['Date']
         ip_address = body.get('ip_address', '')
 
+        
         # Check if record exists
         response = table.scan(
             FilterExpression="employeeId = :employeeId and #date = :date",
@@ -52,64 +55,53 @@ def lambda_handler(event, context):
                 'Date': date,
             })
 
-            # Conditional updates for times and IPs
             if body.get('punch_in_time'):
-                updated_item['punch_in_time'] = body['punch_in_time']
+                updated_item['punch_in_time'] = body.get('punch_in_time')
                 updated_item['custrecord_punch_in_ip_address'] = ip_address
-
+            else:
+                updated_item['punch_in_time'] =''
+                
             if body.get('punch_out_time'):
-                updated_item['punch_out_time'] = body['punch_out_time']
+                updated_item['punch_out_time'] = body.get('punch_out_time')
                 updated_item['custrecord_punch_out_ip_address'] = ip_address
+            else:
+                updated_item['punch_out_time'] =''
 
             if body.get('break_start_time'):
-                updated_item['break_start_time'] = body['break_start_time']
+                updated_item['break_start_time'] = body.get('break_start_time')
                 updated_item['custrecord_break_start_ip_address'] = ip_address
+            else:
+                updated_item['break_start_time'] =''
 
             if body.get('break_end_time'):
-                updated_item['break_end_time'] = body['break_end_time']
+                updated_item['break_end_time'] = body.get('break_end_time')
                 updated_item['custrecord_break_end_ip_address'] = ip_address
+            else:
+                updated_item['break_end_time'] =''
 
             table.put_item(Item=updated_item)
             message_action = "updated"
-
         else:
             # Insert new record
-            punch_id = int(datetime.utcnow().timestamp())
-
             new_item = {
                 'employeeId': employee_id,
                 'companyId': body.get('companyId', ''),
                 'netsuiteId': body.get('netsuiteId', ''),
                 'Date': date,
-                'punch_in_time': body.get('punch_in_time', ''),
-                'punch_out_time': body.get('punch_out_time', ''),
-                'break_start_time': body.get('break_start_time', ''),
-                'break_end_time': body.get('break_end_time', ''),
+                'punch_in_time':  body.get('punch_in_time') ,
+                'punch_out_time':  body.get('punch_out_time') ,
+                'break_start_time':  body.get('break_start_time') ,
+                'break_end_time':   body.get('break_end_time') ,
                 'custrecord_punch_in_ip_address': ip_address if body.get('punch_in_time') else '',
                 'custrecord_punch_out_ip_address': ip_address if body.get('punch_out_time') else '',
                 'custrecord_break_start_ip_address': ip_address if body.get('break_start_time') else '',
-                'custrecord_break_end_ip_address': ip_address if body.get('break_end_time') else '',
+                'custrecord_break_end_ip_address': ip_address if body.get('break_end_time') else ''
             }
 
             table.put_item(Item=new_item)
-            message_action = "inserted"
-
-        # Send message to SQS
-        sqs.send_message(
-            QueueUrl=SQS_URL,
-            MessageBody=json.dumps({
-                'employeeId': employee_id,
-                'Date': date,
-                'action': message_action,
-                'ip_address': body.get('ip_address', ''),
-                'punch_in_time': body.get('punch_in_time', ''),
-                'punch_out_time': body.get('punch_out_time', ''),
-                'break_start_time': body.get('break_start_time', ''),
-                'break_end_time': body.get('break_end_time', '')
-            })
-        )
-
-        return build_response(200, {"message": f"Punch record {message_action} and message sent to SQS."})
+            message_action = "inserted"       
+       
+        return build_response(200, {"message": f"Punch record {message_action}."})
 
     except Exception as e:
         print("Error handling punch record:", e)

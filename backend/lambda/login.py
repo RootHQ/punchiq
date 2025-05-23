@@ -10,21 +10,17 @@ from requests.auth import AuthBase
 import base64
 
 # JWT Configuration
-JWT_SECRET = os.environ.get('JWT_SECRET', '')
+JWT_SECRET = os.environ.get('JWT_SECRET', 'your_secret_key')
 JWT_ALGORITHM = 'HS256'
-
-# NetSuite Credentials 
-NS_ACCOUNT_ID = ''
-NS_CONSUMER_KEY = ''
-NS_CONSUMER_SECRET = ''
-NS_TOKEN_ID = ''
-NS_TOKEN_SECRET = ''
-NS_BASE_URL = ''
 
 dynamodb = boto3.resource('dynamodb')
 TABLE_NAME = os.environ.get('DYNAMODB_TABLE', 'employee')
 table = dynamodb.Table(TABLE_NAME)
-punch_table = dynamodb.Table(os.environ.get('PUNCH_TABLE', 'Punch'))  # Nueva tabla de Punch
+
+TABLE_settings = os.environ.get('DYNAMODB_TABLE', 'setting')
+tableSettings = dynamodb.Table(TABLE_settings)
+
+punch_table = dynamodb.Table(os.environ.get('PUNCH_TABLE', 'Punch')) 
 
 def lambda_handler(event, context):
     print("===== EVENT RECEIVED =====")
@@ -118,60 +114,6 @@ def determine_punch_status(times):
         return "PUNCHED_OUT"
     else:
         return "UNKNOWN"
-
-
-def check_netsuite_punch(employee_id):
-    
-    today = datetime.datetime.now().strftime('%#m/%#d/%Y') if os.name == 'nt' else datetime.datetime.now().strftime('%-m/%-d/%Y')
-    query = (
-        f"SELECT * FROM customrecord_employee_time_punch "
-        f"WHERE custrecord_employee_punched = '{employee_id}' "
-        f"AND custrecord_employee_time_punch_date = '{today}' "
-    )
-
-    auth = OAuth1WithRealm(
-        NS_CONSUMER_KEY, NS_CONSUMER_SECRET,
-        NS_TOKEN_ID, NS_TOKEN_SECRET,
-        realm=NS_ACCOUNT_ID
-    )
-
-    headers = {
-        "Content-Type": "application/json",
-        "Prefer": "transient"
-    }
-
-    url = f"{NS_BASE_URL}/query/v1/suiteql"
-    prepared = requests.Request(
-        "POST", url, headers=headers, json={"q": query}, auth=auth
-    ).prepare()
-
-    session = requests.Session()
-    response = session.send(prepared)
-
-    times = {
-        "punch_in_time": None,
-        "break_start_time": None,
-        "break_end_time": None,
-        "punch_out_time": None
-    }
-
-    if response.status_code == 200:
-        data = response.json()
-        if data.get('count', 0) > 0:
-            record_id = data['items'][0]['id']
-            url_record = f"{NS_BASE_URL}/record/v1/customrecord_employee_time_punch/{record_id}"
-            record_response = session.get(url_record, headers=headers, auth=auth)
-
-            if record_response.status_code == 200:
-                item = record_response.json()
-                times["punch_in_time"] = item.get('custrecord_punch_in_time')
-                times["break_start_time"] = item.get('custrecord_break_start_time')
-                times["break_end_time"] = item.get('custrecord_break_end_time')
-                times["punch_out_time"] = item.get('custrecord_punch_out_time')
-
-                return determine_punch_status(times), times
-
-    return "NOT_PUNCHED_IN", times
 
 
 def generate_jwt(employee_id, pin, empName, company_id):

@@ -5,19 +5,30 @@ import requests
 from datetime import datetime
 from requests_oauthlib import OAuth1
 from requests.auth import AuthBase
+import time
+
 
 # AWS Resources
 sqs = boto3.client('sqs')
-QUEUE_URL = ''
+dynamodb = boto3.resource('dynamodb')
 
+def get_secret(setting_name):
+    try:
+        settings_table = dynamodb.Table('setting')
+        response = settings_table.get_item(
+            Key={'setting_id': setting_name}
+        )
+        if 'Item' in response:
+            return response['Item'].get('value')
+        else:
+            print(f"Setting {setting_name} not found.")
+            return None
+    except Exception as e:
+        print(f"Error retrieving setting {setting_name}:", e)
+        return None
 
-# NetSuite Credentials 
-NS_ACCOUNT_ID = ''
-NS_CONSUMER_KEY = ''
-NS_CONSUMER_SECRET = ''
-NS_TOKEN_ID = ''
-NS_TOKEN_SECRET = ''
-NS_BASE_URL = ''
+NS_BASE_URL = get_secret('NS_BASE_URL')
+
 def lambda_handler(event, context):
     if 'Records' not in event:
         print("No 'Records' found. Are you testing manually?")
@@ -44,6 +55,12 @@ def lambda_handler(event, context):
             print(f"❌ Error processing message: {e}")
 
 def process_punch(data):
+    NS_CONSUMER_KEY = get_secret('NS_CONSUMER_KEY')
+    NS_CONSUMER_SECRET = get_secret('NS_CONSUMER_SECRET')
+    NS_TOKEN_ID = get_secret('NS_TOKEN_ID')
+    NS_TOKEN_SECRET = get_secret('NS_TOKEN_SECRET')
+    NS_ACCOUNT_ID = get_secret('NS_ACCOUNT_ID')
+
     auth = OAuth1WithRealm(
         NS_CONSUMER_KEY, NS_CONSUMER_SECRET,
         NS_TOKEN_ID, NS_TOKEN_SECRET,
@@ -65,6 +82,7 @@ def process_punch(data):
         #return create_punch_record(auth, data)
 
 def query_existing_punch(auth, employee_id, today):
+
     url = f"{NS_BASE_URL}/query/v1/suiteql"
     headers = {"Content-Type": "application/json", "Prefer": "transient"}
     query = f"""SELECT * FROM customrecord_employee_time_punch WHERE custrecord_employee_punched = '{employee_id}' AND custrecord_employee_time_punch_date = '{today}'"""
@@ -84,8 +102,8 @@ def query_existing_punch(auth, employee_id, today):
         print(f"Exception during NetSuite Query: {e}")
     return None
 
-
 def create_punch_record(auth, data):
+
     url = f"{NS_BASE_URL}/record/v1/customrecord_employee_time_punch"
     headers = {"Content-Type": "application/json"}
 
@@ -112,6 +130,7 @@ def create_punch_record(auth, data):
     return False
 
 def update_punch_record(auth, record_id, data):
+
     url = f"{NS_BASE_URL}/record/v1/customrecord_employee_time_punch/{record_id}"
     headers = {"Content-Type": "application/json", "Prefer": "transient"}
     ip_address = data.get('ip_address', '').strip()
@@ -151,7 +170,15 @@ def update_punch_record(auth, record_id, data):
 
     return False
 
-
+def safe_request(func, retries=3, delay=1):
+    for attempt in range(retries):
+        try:
+            return func()
+        except Exception as e:
+            print(f"Retry {attempt+1}/{retries} due to: {e}")
+            time.sleep(delay)
+    return None
+    
 class OAuth1WithRealm(AuthBase):
     def __init__(self, client_key, client_secret, resource_owner_key, resource_owner_secret, realm, **kwargs):
         self.realm = realm
