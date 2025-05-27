@@ -104,17 +104,21 @@ def get_today_punch_record(employee_id, company_id):
 
 
 def determine_punch_status(times):
-    if not times["punch_in_time"] and not times["punch_in_time"] and not times["break_start_time"] and not times["punch_out_time"]:
+    punch_in = times.get("punch_in_time")
+    break_start = times.get("break_start_time")
+    break_end = times.get("break_end_time")
+    punch_out = times.get("punch_out_time")
+
+    if not punch_in and not break_start and not punch_out:
         return "NOT_PUNCHED_IN"
-    elif times["punch_in_time"] and not times["break_start_time"] and not times["punch_out_time"]:
+    elif punch_in and not break_start and not punch_out:
         return "PUNCHED_IN"
-    elif times["break_start_time"] and not times["break_end_time"] and not times["punch_out_time"]:
+    elif break_start and not break_end and not punch_out:
         return "ON_BREAK"
-    elif times["punch_out_time"]:
+    elif punch_out:
         return "PUNCHED_OUT"
     else:
         return "UNKNOWN"
-
 
 def generate_jwt(employee_id, pin, empName, company_id):
     encrypted_pin = encode_pin(pin)
