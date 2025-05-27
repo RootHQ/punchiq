@@ -1,0 +1,149 @@
+.login-container {
+    justify-content: center;
+    align-items: center;
+    background-color: #323232;
+    font-family: 'Roboto', sans-serif;
+    margin: auto;
+    display: grid;
+    width: 100%;
+
+  }
+  
+  .login-box {
+    background-color: #323232;
+    padding: 40px;
+    border-radius: 12px;
+    text-align: center;
+    width: 100%;
+    max-width: 400px;
+    color: #DFDFDF;
+    margin: auto;
+    max-width: 287px;
+    padding-top: 0;
+
+  }
+  
+
+  
+  .description {
+    font-size: 12px;
+    color: #DFDFDF;
+    margin-bottom: 20px;
+  }
+  
+  .form label {
+    display: block;
+    text-align: left;
+    margin: 20px 0 5px;
+    color: #b2b2b2;
+    font-weight: 500;
+    font-size: 12px;
+  }
+  
+  .form input {
+    width: 95%;
+    padding: 10px;
+    border-radius: 6px;
+    border: none;
+    margin-bottom: 10px;
+    background-color: #323232;
+    color: #fff;
+  }
+  
+  .pin-wrapper {
+    position: relative;
+  }
+  
+  .eye-icon {
+    position: absolute;
+    right: -40px;
+    top: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    width: 27px;
+    height: 18px;
+  }
+  
+  .eye-off-outline {
+    top: 3px;
+    cursor: pointer;
+    width: 21px;
+    height: 14px;
+    background-size: contain;
+    text-align: center;
+    margin: 10px;
+    background-image: url('../../../assets/eye-off-outline.png');
+  }
+
+  .eye-outline {
+    top: 3px;
+    cursor: pointer;
+    width: 21px;
+    height: 14px;
+    background-size: contain;
+    text-align: center;
+    margin: 10px;
+    background-image: url('../../../assets/eye-outline.png');
+  }
+  
+  
+  .forgot-pin {
+    display: block;
+    text-align: right;
+    margin-bottom: 20px;
+    font-size: 0.85rem;
+    color: #ff8c42;
+    text-decoration: none;
+  }
+  
+  .btn-login {
+    width: 100%;
+    padding: 12px;
+    background-color: #E57816;
+    border: none;
+    border-radius: 6px;
+    font-weight: 500;
+    color: #fff;
+    cursor: pointer;
+    font-size: 12px;
+    margin-top: 30px;
+
+  }
+  
+
+    .input_disabled{
+      background-color: #ADADAD !important;
+      color: #7C7C7C !important;
+    }
+
+    .input{
+      background-color: #DFDFDF!important;
+      color: #7C7C7C !important;
+    }
+  .textServices{
+    text-align: center;
+    width: 32%;
+    margin: auto;
+    margin-top: 7%;
+    color: #6e6e6e;
+    font-size: 12px;
+  }
+    
+  .error {
+    color: #d0272a;;
+    font-size: 0.8rem;
+    text-align: left;
+  }
+
+  .space-top{
+    margin-top: 5%;
+    height: 15px;
+
+  }
+  h2,.description{
+    margin: 0 !important;
+  }
+  .description{
+    margin: 0 !important;
+    font-weight: 500;
+  }

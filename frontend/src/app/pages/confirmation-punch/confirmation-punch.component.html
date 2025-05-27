@@ -1,0 +1,53 @@
+<div class="header">
+    <div  class="logo" ></div>
+  </div>
+  
+  <div class="login-container">
+
+      <div class="login-box">
+        
+        <div *ngIf="punchStatus === 'punchInTime'" class="punchStatus">
+          <div  class="greenMessage">Welcome In  </div>
+          <div class="messageShowPunch">{{this.messageShowPunch}} </div>
+
+        </div>
+
+        <div *ngIf="punchStatus === 'breakStartTime'" class="punchStatus">
+            <div class="blueMessage">Enjoy Your Break  </div>
+            <div class="messageShowPunch">{{this.breakStartTime}} </div>
+
+          </div>
+        
+          <div *ngIf="punchStatus === 'breakEndTime'" class="punchStatus">
+            <div class="greenMessage">Welcome Back
+                 </div>
+                 <div class="messageShowPunch">{{this.breakEndTime}} </div>
+
+          </div>
+          <div *ngIf="punchStatus === 'punchOutTime'" class="punchStatus">
+            <app-confetti></app-confetti>
+
+            <div class="redMessage">Enjoy Your Time Off  </div>
+            <div class="messageShowPunch">{{this.punchOutTime}} </div>
+  
+          </div>
+
+          <br/><br/><br/><br/>
+        <div class="messageShow">
+            You’ll automatically be logged out in...
+            <br/>
+            <span class="seconds">{{ countdownSeconds }}</span> second<span *ngIf="countdownSeconds !== 1">s</span>
+        </div>
+        
+        <div class="divider">OR</div>
+
+        <button (click)="onLogout()" class=" btn btn-login topSpace Logoutbtn">Logout</button>
+
+        <br><br><br>
+
+        
+         
+      </div>
+        
+    </div>
+    
