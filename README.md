@@ -10,7 +10,7 @@ This project implements a modern, serverless employee punch system using:
 
 ## 📁 Estructura del Proyecto
 
-```
+``` 
 punch-iq-project/
 ├── frontend/         # Angular frontend
 ├── backend/          # FastAPI and worker Lambdas
