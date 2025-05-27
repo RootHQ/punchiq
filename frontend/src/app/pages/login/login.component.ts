@@ -71,13 +71,7 @@ export class LoginComponent implements OnInit {
       'FINISHED_BREAK': `${baseRoute}/punch`,
       'PUNCHED_OUT': `${baseRoute}/punch`
     };
-   /* const routesMap: { [key: string]: string } = {
-      'NOT_PUNCHED_IN': `${baseRoute}/punch`,
-      'PUNCHED_IN': `${baseRoute}/break`,
-      'ON_BREAK': `${baseRoute}/resume-work`,
-      'FINISHED_BREAK': `${baseRoute}/resume-work`,
-      'PUNCHED_OUT': `${baseRoute}/summary`
-    };*/
+   
 
     const targetRoute = routesMap[punchStatus] || `${baseRoute}/punch`;
     console.log('Navigating to:', targetRoute);
