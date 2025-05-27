@@ -123,7 +123,7 @@ def generate_jwt(employee_id, pin, empName, company_id):
         "pin_encrypted": encrypted_pin,
         "empName": empName,
         "company_id": company_id,
-        "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=1)
+        "exp":  datetime.datetime.now() + datetime.timedelta(hours=1)
     }
     return jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
 
