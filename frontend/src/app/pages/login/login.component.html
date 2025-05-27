@@ -23,15 +23,16 @@
         <div class="pin-wrapper">
           <input [type]="showPin ? 'text' : 'password'" class="input" id="pin" [(ngModel)]="pin" name="pin" required maxlength="4" />
          
-          <button 
+          <div 
             class="eye-icon" 
             [ngClass]="showPin ? 'eye-off-outline' : 'eye-outline'" 
             (click)="togglePinVisibility()" 
             (keydown.enter)="togglePinVisibility()" 
             (keydown.space)="togglePinVisibility()" 
             tabindex="0"
+            role="button"
             aria-label="Toggle PIN visibility">
-          </button>
+          </div>
         </div>
       
         <button (click)="onLogin()"class="btn-login topSpace" [disabled]="isLoading">
