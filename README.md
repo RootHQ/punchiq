@@ -9,7 +9,7 @@ This project implements a modern, serverless employee punch system using:
 - **Mensajería:** Amazon SQS
 
 ## 📁 Estructura del Proyecto
-
+ 
 ``` 
 punch-iq-project/
 ├── frontend/         # Angular frontend
