@@ -1,4 +1,4 @@
-# Punch IQ - Serverless Time Tracking System
+# Punch IQ - Serverless Time Tracking System 
 
 This project implements a modern, serverless employee punch system using:
 
