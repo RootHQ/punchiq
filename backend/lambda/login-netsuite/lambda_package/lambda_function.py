@@ -33,7 +33,7 @@ def lambda_handler(event, context):
 def generate_jwt(employee_id):
     payload = {
         'employee_id': employee_id,
-        'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=1)  # Token expires in 1 hour
+        'exp': datetime.datetime.now() + datetime.timedelta(hours=1)  # Token expires in 1 hour
     }
     token = jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
     return token
