@@ -90,7 +90,6 @@ resource "aws_iam_policy" "punchiq_full_access" {
         Effect = "Allow",
         Action = [
           "lambda:CreateFunction",
-          "lambda:UpdateFunctionCode",
           "lambda:InvokeFunction"
         ],
         Resource = "*"
