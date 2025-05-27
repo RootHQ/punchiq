@@ -37,7 +37,7 @@ class PunchRequest(BaseModel):
     employee_id: str
     pin: str
     action: str
-    timestamp: str = datetime.utcnow().isoformat()
+    timestamp: str = datetime.now().isoformat()
 
 # Routes
 @app.get("/health")

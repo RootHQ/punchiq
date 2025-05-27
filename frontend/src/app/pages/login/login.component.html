@@ -27,7 +27,9 @@
             class="eye-icon" 
             [ngClass]="showPin ? 'eye-off-outline' : 'eye-outline'" 
             (click)="togglePinVisibility()" 
-            alt="Toggle Pin Visibility">
+            (keydown)="togglePinVisibility()" 
+            alt="Toggle Pin Visibility"
+            tabindex="0">
           </div>
         </div>
       
