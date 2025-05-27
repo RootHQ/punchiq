@@ -5,7 +5,7 @@ This project implements a modern, serverless employee punch system using:
 - **Frontend:** Angular + S3 + CloudFront
 - **Backend:** FastAPI (Python) on AWS Lambda
 - **Infraestructura:** Terraform
-- **Base de datos:** DynamoDB
+- **Base de datos:** DynamoDB 
 - **Mensajería:** Amazon SQS
 
 ## 📁 Estructura del Proyecto
