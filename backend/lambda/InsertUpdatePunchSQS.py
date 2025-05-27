@@ -148,7 +148,7 @@ def get_employee_local_time(employee_id):
         return now_local.strftime("%H:%M")  # Just the time
     except Exception as e:
         print("Error retrieving employee local time:", e)
-        return datetime.utcnow().strftime("%H:%M")  # fallback to UTC
+        return datetime.now().strftime("%H:%M")  # fallback to UTC
 
 def get_setting_value(setting_name):
     try:
