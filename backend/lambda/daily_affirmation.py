@@ -16,124 +16,125 @@ employee_table = dynamodb.Table(EMPLOYEE_TABLE_NAME)
 
 def lambda_handler(event, context):
     print("Received event:", event)
-
     try:
-        body = json.loads(event['body']) if 'body' in event else event
-
-        required_fields = ['employeeId', 'Date']
-        for field in required_fields:
-            if field not in body:
-                return build_response(400, {"message": f"Missing required field: {field}"})
+        body = parse_event_body(event)
+        validation_error = validate_required_fields(body, ['employeeId', 'Date'])
+        if validation_error:
+            return build_response(400, {"message": validation_error})
 
         employee_id = int(body['employeeId'])
         date = body['Date']
         ip_address = body.get('ip_address', '')
 
-        
-        # Check if record exists
-        response = table.scan(
-            FilterExpression="employeeId = :employeeId and #date = :date",
-            ExpressionAttributeValues={
-                ':employeeId': employee_id,
-                ':date': date
-            },
-            ExpressionAttributeNames={
-                '#date': 'Date'
-            }
-        )
-
-        message_action = ""
-        if response['Items']:
-            # Update existing record
-            existing_item = response['Items'][0]
-            updated_item = existing_item.copy()
-
-            updated_item.update({
-                'employeeId': employee_id,
-                'companyId': body.get('companyId', existing_item.get('companyId')),
-                'netsuiteId': body.get('netsuiteId', existing_item.get('netsuiteId')),
-                'Date': date,
-            })
-
-            if body.get('punch_in_time'):
-                updated_item['punch_in_time'] =get_employee_local_time(employee_id)
-                updated_item['custrecord_punch_in_ip_address'] = ip_address
-            
-                
-            if body.get('punch_out_time'):
-                updated_item['punch_out_time'] = get_employee_local_time(employee_id)
-                updated_item['custrecord_punch_out_ip_address'] = ip_address
-           
-
-            if body.get('break_start_time'):
-                updated_item['break_start_time'] = get_employee_local_time(employee_id)
-                updated_item['custrecord_break_start_ip_address'] = ip_address
-          
-
-            if body.get('break_end_time'):
-                updated_item['break_end_time'] = get_employee_local_time(employee_id)
-                updated_item['custrecord_break_end_ip_address'] = ip_address
-            
-
-            table.put_item(Item=updated_item)
-            message_action = "updated"
-        else:
-            # Insert new record
-            new_item = {
-                'employeeId': employee_id,
-                'companyId': body.get('companyId', ''),
-                'netsuiteId': body.get('netsuiteId', ''),
-                'Date': date,
-                'punch_in_time': get_employee_local_time(employee_id) if body.get('punch_in_time') else '',
-                'punch_out_time': get_employee_local_time(employee_id) if body.get('punch_out_time') else '',
-                'break_start_time': get_employee_local_time(employee_id) if body.get('break_start_time') else '',
-                'break_end_time': get_employee_local_time(employee_id) if body.get('break_end_time') else '',
-                'custrecord_punch_in_ip_address': ip_address if body.get('punch_in_time') else '',
-                'custrecord_punch_out_ip_address': ip_address if body.get('punch_out_time') else '',
-                'custrecord_break_start_ip_address': ip_address if body.get('break_start_time') else '',
-                'custrecord_break_end_ip_address': ip_address if body.get('break_end_time') else ''
-            }
-
-            table.put_item(Item=new_item)
-            message_action = "inserted"
-
-        # Base SQS message
-        sqs_message = {
-            'employeeId': employee_id,
-            'Date': date,
-            'action': message_action,
-            'ip_address': ip_address
-        }
-
-        if body.get('punch_in_time'):
-            sqs_message['punch_in_time'] = get_employee_local_time(employee_id)
-    
-                
-        if body.get('punch_out_time'):
-            sqs_message['punch_out_time'] = get_employee_local_time(employee_id)
-
-        if body.get('break_start_time'):
-             sqs_message['break_start_time'] = get_employee_local_time(employee_id)
-        
-
-        if body.get('break_end_time'):
-             sqs_message['break_end_time'] = get_employee_local_time(employee_id)
+        message_action = handle_punch_record(body, employee_id, date, ip_address)
+        sqs_message = build_sqs_message(body, employee_id, date, message_action, ip_address)
 
         SQS_URL = get_setting_value('SQS_URL')
         print("SQS_URL loaded from settings table:", SQS_URL)
+        send_sqs_message(SQS_URL, sqs_message)
 
-        # Send message to SQS
-        sqs.send_message(
-            QueueUrl=SQS_URL,
-            MessageBody=json.dumps(sqs_message)
-        )
-
-       
         return build_response(200, {"message": f"Punch record {message_action} and message sent to SQS."})
 
     except Exception as e:
         print("Error handling punch record:", e)
         return build_response(500, {"message": "Internal server error"})
+
+
+def parse_event_body(event):
+    if 'body' in event:
+        return json.loads(event['body'])
+    return event
+
+def validate_required_fields(body, required_fields):
+    for field in required_fields:
+        if field not in body:
+            return f"Missing required field: {field}"
+    return None
+
+def handle_punch_record(body, employee_id, date, ip_address):
+    response = table.scan(
+        FilterExpression="employeeId = :employeeId and #date = :date",
+        ExpressionAttributeValues={
+            ':employeeId': employee_id,
+            ':date': date
+        },
+        ExpressionAttributeNames={
+            '#date': 'Date'
+        }
+    )
+    if response['Items']:
+        updated_item = update_existing_record(response['Items'][0], body, employee_id, date, ip_address)
+        table.put_item(Item=updated_item)
+        return "updated", updated_item
+    else:
+        new_item = create_new_record(body, employee_id, date, ip_address)
+        table.put_item(Item=new_item)
+        return "inserted", new_item
+
+def update_existing_record(existing_item, body, employee_id, date, ip_address):
+    updated_item = existing_item.copy()
+    updated_item.update({
+        'employeeId': employee_id,
+        'companyId': body.get('companyId', existing_item.get('companyId')),
+        'netsuiteId': body.get('netsuiteId', existing_item.get('netsuiteId')),
+        'Date': date,
+    })
+    punch_fields = [
+        ('punch_in_time', 'custrecord_punch_in_ip_address'),
+        ('punch_out_time', 'custrecord_punch_out_ip_address'),
+        ('break_start_time', 'custrecord_break_start_ip_address'),
+        ('break_end_time', 'custrecord_break_end_ip_address')
+    ]
+    for time_field, ip_field in punch_fields:
+        if body.get(time_field):
+            updated_item[time_field] = get_employee_local_time(employee_id)
+            updated_item[ip_field] = ip_address
+    return updated_item
+
+def create_new_record(body, employee_id, date, ip_address):
+    punch_fields = [
+        ('punch_in_time', 'custrecord_punch_in_ip_address'),
+        ('punch_out_time', 'custrecord_punch_out_ip_address'),
+        ('break_start_time', 'custrecord_break_start_ip_address'),
+        ('break_end_time', 'custrecord_break_end_ip_address')
+    ]
+    new_item = {
+        'employeeId': employee_id,
+        'companyId': body.get('companyId', ''),
+        'netsuiteId': body.get('netsuiteId', ''),
+        'Date': date,
+    }
+    for time_field, ip_field in punch_fields:
+        new_item[time_field] = get_employee_local_time(employee_id) if body.get(time_field) else ''
+        new_item[ip_field] = ip_address if body.get(time_field) else ''
+    return new_item
+
+def build_sqs_message(body, employee_id, date, message_action, ip_address):
+    sqs_message = {
+        'employeeId': employee_id,
+        'Date': date,
+        'action': message_action,
+        'ip_address': ip_address
+    }
+    punch_fields = [
+        'punch_in_time',
+        'punch_out_time',
+        'break_start_time',
+        'break_end_time'
+    ]
+    for field in punch_fields:
+        if body.get(field):
+            sqs_message[field] = get_employee_local_time(employee_id)
+    return sqs_message
+
+def send_sqs_message(sqs_url, sqs_message):
+    if not sqs_url:
+        print("SQS URL is not set. Message not sent.")
+        return
+    sqs.send_message(
+        QueueUrl=sqs_url,
+        MessageBody=json.dumps(sqs_message)
+    )
 
 def build_response(status, body):
     return {
