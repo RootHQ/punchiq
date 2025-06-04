@@ -5,7 +5,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { PunchService } from '../../services/punch.service';
 import { jwtDecode } from 'jwt-decode';
 import { MissedPunchDialogComponent } from '../missed-punch-dialog/missed-punch-dialog.component';
-//import { SessionExpirationDialogComponent } from '../session-expiration-dialog/session-expiration-dialog.component'; // Dialog for session expiration warning
 
 export interface JwtPayload {
   sub: string;

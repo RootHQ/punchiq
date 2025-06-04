@@ -1,0 +1,116 @@
+<div class="header">
+  <div class="logo"></div>
+  <a class="header-link" [routerLink]="['/', companyId, 'punch']">Home</a>
+</div>
+
+<div class="login-container">
+  <div class="login-box">
+    <h2>Time Off Request</h2>
+    <p class="description">Small text </p>
+
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 full-width-table">
+      <ng-container *ngFor="let col of columnsSchema" [matColumnDef]="col.key">
+        <!-- Header -->
+        <th mat-header-cell *matHeaderCellDef>{{ col.label }}</th>
+
+        <!-- Cell -->
+        <td mat-cell *matCellDef="let element">
+          <ng-container [ngSwitch]="col.type">
+            <ng-container *ngIf="!element.isEdit">
+                    <ng-container [ngSwitch]="col.key">
+                      <ng-container *ngSwitchCase="'date'">
+                        {{ element[col.key] | date:'yyyy-MM-dd' }}
+                      </ng-container>
+                      
+                      <ng-container *ngSwitchCase="'payCode'">
+                        {{ getPayCodeLabel(element[col.key]) }}
+                      </ng-container>
+                      
+                      <ng-container *ngSwitchCase="'length'">
+                        {{ getLabelForLength(element[col.key]) }}
+                      </ng-container>
+                       
+                      <ng-container *ngSwitchDefault>
+                        {{ element[col.key] }}
+                      </ng-container>
+
+                    </ng-container>
+                  </ng-container>
+             
+            <ng-container *ngIf="element.isEdit">
+              <ng-container *ngSwitchCase="'isEdit'">
+                <button mat-icon-button color="warn" (click)="removeRow(element.id)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </ng-container>
+
+              <!-- Date -->
+              <mat-form-field *ngSwitchCase="'date'" appearance="outline"
+              [ngClass]="{'field-error': element.errors?.date}">
+              <mat-label>Date</mat-label>
+              <input 
+                    matInput [matDatepicker]="picker" 
+                    [(ngModel)]="element[col.key]" 
+                    (dateChange)="onDateSelected(picker, element)" />
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+                            
+              <!-- PayCode -->
+             <mat-form-field *ngSwitchCase="'payCode'" appearance="outline" [ngClass]="{'field-error': element.errors?.payCode}">
+              <mat-label>Pay Code</mat-label>
+              <mat-select [(ngModel)]="element[col.key]">
+                <mat-option [value]="1">Vacation</mat-option>
+                <mat-option [value]="2">Non-Paid</mat-option>
+              </mat-select>
+              <mat-error *ngIf="element.errors?.payCode">Pay Code is required</mat-error>
+            </mat-form-field>
+
+              <!-- Length -->
+              <mat-form-field *ngSwitchCase="'length'" appearance="outline"
+              [ngClass]="{'field-error': element.errors?.length}">
+                <mat-label>Length</mat-label>
+                <mat-select [(ngModel)]="element[col.key]">
+                  <mat-option value="4 hours">4 hours</mat-option>
+                  <mat-option value="8 hours">8 hours</mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <!-- Notes -->
+              <mat-form-field *ngSwitchCase="'notes'" appearance="outline"
+              [ngClass]="{'field-error': element.errors?.notes}">
+                <mat-label>Notes</mat-label>
+                <input
+                  matInput
+                  [(ngModel)]="element[col.key]"
+                  required
+                  minlength="5"
+                  #notesInput="ngModel" />
+                <mat-error *ngIf="notesInput.invalid && notesInput.touched">
+                  Notes must be at least 5 characters.
+                </mat-error>
+              </mat-form-field>
+            </ng-container>
+          </ng-container>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+
+    <div class="container">
+      <article class="table-header">
+        <a type="button" class="add" (click)="addRow()">+ Add New Line</a>
+      </article>
+      <br /><br />
+
+      <div class="actions">
+        <button type="button" class="btn btn-login topSpace punchDays" (click)="submit()">Submit</button>
+        <div class="divider">OR</div>
+        <button (click)="onLogout()" class="btn btn-login topSpace Logoutbtn">Logout</button>
+        <br /><br /><br />
+      </div>
+    </div>
+  </div>
+</div>

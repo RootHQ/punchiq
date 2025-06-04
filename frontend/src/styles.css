@@ -260,3 +260,16 @@ app-root {
 
     font-size: 12px !important;
 }
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+.header-link{
+  margin: auto;
+    color: white;
+    MARGIN-TOP: 10PX;
+    DISPLAY: inline-grid;
+    float: right;
+    margin-right: 40px;
+    cursor: pointer;
+}
