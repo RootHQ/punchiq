@@ -1,0 +1,18 @@
+h1 {
+  font-weight: normal;
+  font-size: 18px;
+  margin-bottom: 16px;
+}
+
+button {
+  margin-left: 8px;
+}
+
+mat-dialog-content {
+  font-size: 15px;
+  margin-top: 10px;
+}
+
+mat-dialog-actions button {
+  margin-left: 8px;
+}

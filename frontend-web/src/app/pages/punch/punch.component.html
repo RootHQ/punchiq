@@ -1,0 +1,70 @@
+<div class="header">
+  <div  class="logo" ></div>
+  <a class="header-link" [routerLink]="['/', companyId, 'time-request']">Time Off Request</a>
+  
+</div>
+<div class="login-container">
+    <div class="login-box">
+      
+      <h2>Hey {{ employeeName }} </h2>
+
+      <p class="description">Select your punch choice below.</p>
+  
+      <form (ngSubmit)="onPunch()" class="form">
+
+        <label for="employeeId" class="label">Employee ID</label>
+        <input type="text" class="input_disabled" id="employeeId" name="employeeId" [value]="employeeId" disabled readonly/>
+        
+        <label for="pin" class="label">Pin</label>
+        <input [type]="'password'" class="input_disabled"  id="pin" [value]="pin" name="pin"  maxlength="4" disabled readonly />
+         
+        <div class="space-top">        
+          <div class="error" *ngIf="error">{{ error }}</div>
+        </div>
+        
+        <!-- Show "Punch In" if no punch yet -->
+        <button *ngIf="punchStatus === 'NONE'" type="button" 
+          (click)="sendPunch('punchIn')" 
+          class="btn btn-login topSpace punchDays">
+          {{ isLoading ? 'Punching in...' : 'Punch In' }} 
+        </button>
+
+        <button *ngIf="punchStatus === 'punchInTime'" type="button" 
+        (click)="sendPunch('breakStart')" 
+        class="btn btn-login topSpace breackbtn">
+        {{ isLoading ? 'Starting Break...' : 'Start Break' }} 
+      </button>
+      
+      <button *ngIf="punchStatus === 'breakStartTime'" type="button" 
+        (click)="sendPunch('breakEnd')" 
+        class="btn btn-login topSpace breackbtn">
+        {{ isLoading ? 'Ending Break...' : 'End Break' }}  
+      </button>
+
+      <button *ngIf="punchStatus != 'NONE'" type="button" 
+        (click)="sendPunch('punchOut')" 
+        class="btn btn-login topSpace punchOutbtn">
+        {{ isLoading ? 'Punching out...' : 'Punch Out for the Day' }} 
+      </button>
+
+    
+        <div class="divider">OR</div>
+
+        <button (click)="onLogout()" class=" btn btn-login topSpace Logoutbtn">Logout</button>
+
+        <br><br><br>
+
+        <a 
+        class="missed-punch" 
+        *ngIf="punchStatus !== 'breakEndTime' && !punchStatusTemporal" 
+        (click)="onMissedPunch()">
+        Missed Punch
+      </a>
+              <br><br><br>
+      </form>
+      
+       
+    </div>
+      
+  </div>
+  

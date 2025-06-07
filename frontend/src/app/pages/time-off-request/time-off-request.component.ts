@@ -101,7 +101,7 @@ export class TimeOffRequestComponent implements OnInit {
       length: 4,        
       notes: ''
     };
-    this.dataSource.push(newRow);
+   // this.dataSource.push(newRow);
     this.dataSource = [...this.dataSource];
   }
   generateId(): number {
