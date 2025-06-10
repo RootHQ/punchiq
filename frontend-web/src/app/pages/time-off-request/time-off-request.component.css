@@ -205,7 +205,7 @@
 
 
 .full-width-table {
-  width: 100%;
+  width: 50%;
   margin-top: 1rem;
   overflow-x: auto;
 }
@@ -318,14 +318,12 @@ table th {
   text-align: center;
 }
 
-table td {
-  padding: 1px;
-  border-bottom: 1px solid #ddd;
-}
+
 
 
 .mat-mdc-table {
-       table-layout: fixed;
+  table-layout: fixed;
+  width: 100%;
 }
 .btn-login:hover {
   opacity: 0.9;
@@ -342,15 +340,7 @@ table td {
     width: 40%;
 }
 
-.mat-mdc-cell{
-    padding-top: 10px !important;
-   
-}
 
-.cdk-column-date, .mat-column-date,.mat-mdc-cell , .mdc-data-table__cell , .cdk-cell{
-   
-    padding-left: 10px !important;
-}
 .mat-form-field-invalid, .mat-mdc-form-field-outline {
   border-color: red !important;
 }
@@ -475,11 +465,8 @@ table td {
   margin-bottom: 8px;
 }
 
-/* Limitar tamaño de cada input para que no se expandan desigualmente */
-.edit-row-fields mat-form-field {
-  flex: 1 1 180px;
 
-}
+
 
 /* Área de notas puede ser más grande */
 .edit-row-fields .notes-field {
@@ -494,4 +481,66 @@ table td {
     color: white;
     font-size: 14px;
 }
+.full-width {
+  width: 95%;
+  padding-top: 10px ! IMPORTANT;
+}
+.invalid {
+  border: 1px solid red;
+}
 
+.mt-3 {
+  margin-top: 16px;
+}
+.ml-2 {
+  margin-left: 8px;
+}
+
+
+.mat-mdc-cell {
+
+  padding: 0%  !important;
+  padding-left: 1% !important;
+  border: none !important;
+}
+
+.mat-mdc-form-field-infix {
+   
+    width: 75px !important;
+   
+}
+
+.mat-mdc-form-field-subscript-wrapper{
+      height: 1px !important;
+}
+.mat-mdc-text-field-wrapper {
+    width: 50% !important;
+    z-index: 0;
+}
+
+.mdc-notched-outline {
+   
+    height: 80% !important;
+}
+
+.mdc-icon-button, .mat-mdc-icon-button, .mat-mdc-button-base{
+  margin: auto;
+}
+.notes-row{
+  border-bottom: 1px solid #b0b0b0
+}
+
+::ng-deep .field-error .mat-mdc-form-field-outline {
+  border-color: #ff5252 !important;
+  stroke: #ff5252 !important;
+}
+
+::ng-deep .field-error .mdc-notched-outline {
+  border-color: #ff5252 !important;
+}
+
+::ng-deep .field-error .mat-mdc-form-field-focus-overlay {
+  background-color: transparent;
+  border: 2px solid #ff5252 !important;
+  border-radius: 4px;
+}

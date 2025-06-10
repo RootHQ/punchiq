@@ -156,6 +156,8 @@
     color: #42ABCD;
     font-weight: 700;
     width: 100%;
+    line-height: 48px; 
+
   }
 
   .redMessage{
@@ -163,6 +165,7 @@
     color: #C83D3D;
     font-weight: 700;
     width: 100%;
+    line-height: 48px; 
   }
 
   .greenMessage{
@@ -170,6 +173,7 @@
     color: #3BB95C;
     font-weight: 700;
     width: 100%;
+    line-height: 48px; 
   }
   .messageShow{
     font-size: 14px;

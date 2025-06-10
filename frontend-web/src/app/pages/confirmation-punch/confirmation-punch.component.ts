@@ -97,7 +97,7 @@ export class ConfirmationPunchComponent {
       if (this.countdownSeconds === 0) {
         clearInterval(this.countdownInterval);
         console.log('🔓 Unlocking and redirecting after 5 seconds...');
-       // this.onLogout();
+        this.onLogout();
       }
     }, 1000);
   }

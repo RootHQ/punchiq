@@ -1,115 +1,96 @@
 <div class="header">
-  <div class="logo"></div>
+  <div  class="logo" ></div>
   <a class="header-link" [routerLink]="['/', companyId, 'punch']">Home</a>
+  
 </div>
-
 <div class="login-container">
   <div class="login-box">
     <h2>Time Off Request</h2>
-    
-    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 full-width-table">
-      <ng-container *ngFor="let col of columnsSchema" [matColumnDef]="col.key">
-        <!-- Header -->
-        <th mat-header-cell *matHeaderCellDef>{{ col.label }}</th>
-
-        <!-- Cell -->
-        <td mat-cell *matCellDef="let element">
-          <ng-container [ngSwitch]="col.type">
-            <ng-container *ngIf="!element.isEdit">
-                    <ng-container [ngSwitch]="col.key">
-                      <ng-container *ngSwitchCase="'date'">
-                        {{ element[col.key] | date:'yyyy-MM-dd' }}
-                      </ng-container>
-                      
-                      <ng-container *ngSwitchCase="'payCode'">
-                        {{ getPayCodeLabel(element[col.key]) }}
-                      </ng-container>
-                      
-                      <ng-container *ngSwitchCase="'length'">
-                        {{ getLabelForLength(element[col.key]) }}
-                      </ng-container>
-                       
-                      <ng-container *ngSwitchDefault>
-                        {{ element[col.key] }}
-                      </ng-container>
-
-                    </ng-container>
-                  </ng-container>
-             
-            <ng-container *ngIf="element.isEdit">
-              <ng-container *ngSwitchCase="'isEdit'">
-                <button mat-icon-button color="warn" (click)="removeRow(element.id)">
-                  <mat-icon>delete</mat-icon>
-                </button>
-              </ng-container>
-       <div class="edit-row-fields">    
-              <!-- Date -->
-              <mat-form-field *ngSwitchCase="'date'" appearance="outline"
-              [ngClass]="{'field-error': element.errors?.date}">
-              <mat-label>Date</mat-label>
-              <input 
-                    matInput [matDatepicker]="picker" 
-                    [(ngModel)]="element[col.key]" 
-                    (dateChange)="onDateSelected(picker, element)" />
-              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-              <mat-datepicker #picker></mat-datepicker>
-            </mat-form-field>
-                            
-              <!-- PayCode -->
-             <mat-form-field *ngSwitchCase="'payCode'" appearance="outline" [ngClass]="{'field-error': element.errors?.payCode}">
-              <mat-label>Pay Code</mat-label>
-              <mat-select [(ngModel)]="element[col.key]">
-                <mat-option [value]="1">Vacation</mat-option>
-                <mat-option [value]="2">Non-Paid</mat-option>
-              </mat-select>
-              <mat-error *ngIf="element.errors?.payCode">Pay Code is required</mat-error>
-            </mat-form-field>
-
-              <!-- Length -->
-              <mat-form-field *ngSwitchCase="'length'" appearance="outline"
-              [ngClass]="{'field-error': element.errors?.length}">
-                <mat-label>Length</mat-label>
-                <mat-select [(ngModel)]="element[col.key]">
-                  <mat-option value="4 hours">4 hours</mat-option>
-                  <mat-option value="8 hours">8 hours</mat-option>
-                </mat-select>
-              </mat-form-field>
-
-              <!-- Notes -->
-              <mat-form-field *ngSwitchCase="'notes'" appearance="outline"
-              [ngClass]="{'field-error': element.errors?.notes}">
-                <mat-label>Notes</mat-label>
-                <input
-                  matInput
-                  [(ngModel)]="element[col.key]"
-                  
-                  #notesInput="ngModel" />
-                <mat-error *ngIf="notesInput.invalid && notesInput.touched">
-                  Notes must be at least 5 characters.
-                </mat-error>
-              </mat-form-field>
-
-              </div>     
-            </ng-container>
-          </ng-container>
-        </td>
-      </ng-container>
-
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-    </table>
 
     <div class="container">
-      <article class="table-header">
-        <a type="button" class="add" (click)="addRow()">+ Add New Line</a>
-      </article>
-      <br /><br />
+     <table mat-table [dataSource]="dataSource" class="mat-elevation-z2 full-width-table">
 
+          <!-- DATE -->
+          <ng-container matColumnDef="date">
+            <th mat-header-cell *matHeaderCellDef>Date *</th>
+            <td mat-cell *matCellDef="let row">
+              <mat-form-field appearance="outline"
+                class="full-width"
+                [ngClass]="{'field-error': row.errors?.date}">
+  <input matInput [(ngModel)]="row.date" [matDatepicker]="picker">
+  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+  <mat-datepicker #picker></mat-datepicker>
+  <mat-error *ngIf="row.errors?.date">Date is required</mat-error>
+</mat-form-field>
+            </td>
+          </ng-container>
+
+          <!-- PAY CODE -->
+          <ng-container matColumnDef="payCode">
+            <th mat-header-cell *matHeaderCellDef>Pay Code *</th>
+            <td mat-cell *matCellDef="let row">
+             <mat-form-field appearance="outline"
+                class="full-width field-error">
+                <mat-select [(ngModel)]="row.payCode">
+                  <mat-option [value]="1">Vacation</mat-option>
+                  <mat-option [value]="2">Non-Paid</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </td>
+          </ng-container>
+
+          <!-- LENGTH -->
+          <ng-container matColumnDef="length">
+            <th mat-header-cell *matHeaderCellDef>Length *</th>
+            <td mat-cell *matCellDef="let row">
+              <mat-form-field appearance="outline"
+                class="full-width"
+                [ngClass]="{'field-error': row.errors?.length}">
+                <mat-select [(ngModel)]="row.length">
+                  <mat-option [value]="4">4 hours</mat-option>
+                  <mat-option [value]="8">8 hours</mat-option>
+                </mat-select>
+                <mat-error *ngIf="row.errors?.length">Length is required</mat-error>
+              </mat-form-field>
+            </td>
+          </ng-container>
+
+          <!-- HEADER -->
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+
+          <!-- MAIN ROW -->
+          <tr mat-row *matRowDef="let row; columns: displayedColumns; when: isMainRow"></tr>
+
+          <!-- NOTES ROW -->
+          <ng-container matColumnDef="notesRow">
+            <td mat-cell *matCellDef="let row" [attr.colspan]="displayedColumns.length">
+              <div class="notes-row" style="display: flex; gap: 10px; align-items: flex-start;">
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Notes</mat-label>
+                  <input matInput [(ngModel)]="row.notes"
+                        [ngClass]="{'field-error': row.errors?.notes}">
+                  <mat-error *ngIf="row.errors?.notes">Notes must be at least 5 characters</mat-error>
+                </mat-form-field>
+                <button mat-icon-button color="warn" (click)="removeRow(row.id)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- ROWS -->
+          <tr mat-row *matRowDef="let row; columns: ['notesRow']; when: isNotesRow"></tr>
+    </table>
+
+    </div>
+
+    <div class="container">
+      <a type="button" class="add" (click)="addRow()">+ Add New Line</a>
+      <br /><br />
       <div class="actions">
         <button type="button" class="btn btn-login topSpace punchDays" (click)="submit()">Submit</button>
         <div class="divider">OR</div>
         <button (click)="onLogout()" class="btn btn-login topSpace Logoutbtn">Logout</button>
-        <br /><br /><br />
       </div>
     </div>
   </div>

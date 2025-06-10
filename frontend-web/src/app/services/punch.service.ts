@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class PunchService {
-  private apiUrl = 'https://tzpddlbp4d.execute-api.us-east-2.amazonaws.com/prod/InsertUpdatePunchSdddQS';
+  private apiUrl = 'https://tzpddlbp4d.execute-api.us-east-2.amazonaws.com/prod/InsertUpdatePunchSQS';
 
   constructor(private http: HttpClient) {}
 
