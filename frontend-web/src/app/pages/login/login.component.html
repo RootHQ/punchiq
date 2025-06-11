@@ -18,11 +18,13 @@
           <div class="error" *ngIf="error">{{ error }}</div>
         </div>
         <label for="employeeId" class="label  topSpace">Employee ID</label>
-        <input type="text" class="input" id="employeeId" [(ngModel)]="employeeId" name="employeeId" required />
+        <input type="text" 
+  pattern="[0-9]*" 
+  inputmode="numeric" class="input" id="employeeId" [(ngModel)]="employeeId" name="employeeId" required />
   
         <label for="pin" class="label">PIN</label> 
         <div class="pin-wrapper">
-          <input [type]="showPin ? 'text' : 'password'" class="input" id="pin" [(ngModel)]="pin" name="pin" required maxlength="4" />
+          <input pattern="[0-9]*" [type]="showPin ? 'text' : 'password'" class="input" id="pin" [(ngModel)]="pin" name="pin" required maxlength="4" inputmode="numeric" />
          
           <div 
             class="eye-icon" 
