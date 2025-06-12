@@ -19,21 +19,21 @@
 
         <div *ngIf="punchStatus === 'breakStartTime'" class="punchStatus">
             <div class="blueMessage">Enjoy Your Break  </div>
-            <div class="messageShowPunch">{{this.breakStartTime}} </div>
+            <div class="messageShowPunch">{{formatTimeTo12Hour(this.breakStartTime)}} </div>
 
           </div>
         
           <div *ngIf="punchStatus === 'breakEndTime'" class="punchStatus">
             <div class="blueMessage">Welcome Back
                  </div>
-                 <div class="messageShowPunch">{{this.breakEndTime}} </div>
+                 <div class="messageShowPunch">{{formatTimeTo12Hour(this.breakEndTime)}} </div>
 
           </div>
           <div *ngIf="punchStatus === 'punchOutTime'" class="punchStatus">
             <app-confetti></app-confetti>
 
             <div class="redMessage">Enjoy Your Time Off  </div>
-            <div class="messageShowPunch">{{this.punchOutTime}} </div>
+            <div class="messageShowPunch">{{formatTimeTo12Hour(this.punchOutTime)}} </div>
   
           </div>
 

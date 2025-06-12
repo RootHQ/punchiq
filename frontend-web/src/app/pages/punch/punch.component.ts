@@ -152,9 +152,23 @@ export class PunchComponent {
     if (!lastTime) {
       return 'Your last recorded punch: No punches yet';
     }
+    
+    const date = this.toDate(lastTime);
   
-    return `Your last recorded punch: ${lastTime} EST (${lastLabel})`;
+    const formattedTime = date.toLocaleTimeString('en-US', {
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,  
+    });
+
+    return `Your last recorded punch: ${formattedTime} (${lastLabel})`;
   }
+
+  toDate(timeStr: string): Date {
+  const today = new Date();
+  const [hour, minute] = timeStr.split(':').map(Number);
+  return new Date(today.getFullYear(), today.getMonth(), today.getDate(), hour, minute);
+}
   
   isValidTime(value: any): boolean {
     const isValid = value != null && value !== '' && value !== 'null';
